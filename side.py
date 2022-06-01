@@ -1,16 +1,14 @@
 import time, random
 
-# Scheduler
+# SCHEDULER
 
 def Scheduler():
-
-    # setting global vars
 
     global timeInterval
     global minFillValue
     global maxFillValue
     
-    timeInterval = 1 # time in secs between each call
+    timeInterval = 5 # time in secs between each call
     minFillValue = 0 # minimal Fill Value for water tank
     maxFillValue = 100 # maximal Fill Value for water tank
 
@@ -55,37 +53,72 @@ def Scheduler():
 
     #print('Scheduler wurde aufgerufen')
 
-# Simulator
+# SIMULATOR
 
-firstCall = True # var which states if first call or not
+# setting start-vars
+
+firstCall = True # stating if first call or not
+tendency = random.randint(0, 1) # generating randomly if increasing or decreasing tendency
+tendencyRange = random.randint(3, 7) # generating random tendency range
+tendencyRangeCounter = 0 # counting current tendencyRange status
 
 def Simulator():
     global firstCall
     global fillValue
-    tendency = random.randint(0, 1)
+    global tendency
+    global tendencyRange
+    global tendencyRangeCounter
+
+    # SIMULATOR: FILL-VALUE
 
     # firstCall: check if first call or not
 
     if firstCall == True: # "True": is first call
         fillValue = random.randint(minFillValue, maxFillValue)
         firstCall = False
+        print(f"Wasserspeicher-Füllstand beträgt: {fillValue}")
     else: # "False": is not first call
-        
-        # tendency: decides if addition or subtraction
+
+        # when addition-tendency
 
         if tendency == 0:
-            fillValue = fillValue + random.randint(0, 10)
-        else:
-            fillValue = fillValue - random.randint(0, 10)
+            if tendencyRange != tendencyRangeCounter:
+                fillValue = fillValue + random.randint(0, 10)
+                tendencyRangeCounter = tendencyRangeCounter + 1
+            else:
+                tendency = random.randint(0, 1)
+                tendencyRange = random.randint(3, 7)
+                tendencyRangeCounter = 0
+        
+        # when subtraction-tendency
 
-        # fillValue: check if var is in the defined region
+        else:
+            if tendencyRange != tendencyRangeCounter:
+                fillValue = fillValue - random.randint(0, 10)
+                tendencyRangeCounter = tendencyRangeCounter + 1
+            else:
+                tendency = random.randint(0, 1)
+                tendencyRange = random.randint(3, 7)
+                tendencyRangeCounter = 0
+
+        # check if vars are in defined region
 
         if fillValue < minFillValue or fillValue > maxFillValue:
-            Simulator() # outside of region: call again
+            Simulator() # not in region: re-call function
         else:
-            print(f"Wasserspeicher-Füllstand beträgt: {fillValue}") # inside of region: print & go on
+            print(f"Wasserspeicher-Füllstand beträgt: {fillValue}") # in region: go on
 
-# calling Scheduler-function each <timeInterval> seconds
+    # SIMULATOR: HUMIDITY-VALUE
+
+    humidityValue = random.randint(0, 1)
+
+    if humidityValue == 0:
+        print('Feuchtigkeit ist: OK')
+    else:
+        print('Feuchtigkeit ist: NOK')
+
+
+# SYSTEM: PROCESS-LOOP
 
 while True:
     Scheduler()
