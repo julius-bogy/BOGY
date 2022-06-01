@@ -8,7 +8,7 @@ def Scheduler():
     global minFillValue
     global maxFillValue
     
-    timeInterval = 5 # time in secs between each call
+    timeInterval = 1 # time in secs between each call
     minFillValue = 0 # minimal Fill Value for water tank
     maxFillValue = 100 # maximal Fill Value for water tank
 
@@ -51,14 +51,16 @@ def Scheduler():
         print('Fehler: "minFillValue" darf nicht größer oder gleich "maxFillValue" sein.')
         exit()
 
+    # check if there's an min difference of 10
+
     if maxFillValue - minFillValue < 10:
         print('Fehler: Zwischen "minFillValue" & "maxFillValue" muss ein Abstand von mind. 10 liegen.')
         exit()
 
     # check if timeInterval is less or more than defined region
 
-    if timeInterval < 0:
-        print('Fehler: "timeInterval" darf den Wert 0 (0s) nicht unterschreiten.')
+    if timeInterval < 1:
+        print('Fehler: "timeInterval" darf den Wert 1 (1s) nicht unterschreiten.')
         exit()
 
     if timeInterval > 900:
@@ -120,7 +122,10 @@ def Simulator():
         if fillValue < minFillValue or fillValue > maxFillValue:
             Simulator() # not in region: re-call function
         else:
-            print(f"Wasserspeicher-Füllstand beträgt: {fillValue}") # in region: go on
+            if type(fillValue) == int:
+                print(f"Wasserspeicher-Füllstand beträgt: {fillValue}") # in region: go on
+            else:
+                print('Fehler: "fillValue" muss ein Wert vom Typ Integer sein/eine ganze Zahl sein.')
 
     # SIMULATOR: HUMIDITY-VALUE
 
@@ -130,7 +135,6 @@ def Simulator():
         print('Feuchtigkeit ist: OK')
     else:
         print('Feuchtigkeit ist: NOK')
-
 
 # SYSTEM: PROCESS-LOOP
 
