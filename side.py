@@ -51,6 +51,20 @@ def Scheduler():
         print('Fehler: "minFillValue" darf nicht größer oder gleich "maxFillValue" sein.')
         exit()
 
+    if maxFillValue - minFillValue < 10:
+        print('Fehler: Zwischen "minFillValue" & "maxFillValue" muss ein Abstand von mind. 10 liegen.')
+        exit()
+
+    # check if timeInterval is less or more than defined region
+
+    if timeInterval < 0:
+        print('Fehler: "timeInterval" darf den Wert 0 (0s) nicht unterschreiten.')
+        exit()
+
+    if timeInterval > 900:
+        print('Fehler: "timeInterval" darf den Wert 900 (900s) nicht überschreiten.')
+        exit()
+
     #print('Scheduler wurde aufgerufen')
 
 # SIMULATOR
