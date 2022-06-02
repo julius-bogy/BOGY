@@ -158,4 +158,4 @@ while True:
     Simulator()
     for x in range(timeInterval):
         time.sleep(1)
-        #print(f'{timeInterval - x - 1} Sekunde(n) bis zum Aufruf.')sasawasaw
+        #print(f'{timeInterval - x - 1} Sekunde(n) bis zum Aufruf.')
