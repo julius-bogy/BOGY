@@ -1,6 +1,6 @@
 import time, random
-global humidityValue
 global fillValue
+global humidityValue
 
 print('Mit welchen Werten möchten sie fortfahren? \n[1] Automatische\n[2] Benutzerdefinierte')
 askAction = input('Eingabe (1/2): ')
@@ -95,6 +95,7 @@ def Simulator():
     global tendency
     global tendencyRange
     global tendencyRangeCounter
+    global fillValue
     global humidityValue
     global isLimit
 
@@ -147,6 +148,7 @@ def Simulator():
                 print(f'Wasserspeicher-Füllstand beträgt: {fillValue}') # in region: go on
             else:
                 print('Fehler: "fillValue" muss ein Wert vom Typ Integer sein/eine ganze Zahl sein.')
+                exit()
 
     # SIMULATOR: HUMIDITY-VALUE
     if isLimit == False:
@@ -156,6 +158,36 @@ def Simulator():
             print('Feuchtigkeit ist: OK')
         else:
             print('Feuchtigkeit ist: NOK')
+
+def customValues():
+    global fillValue
+    global humidityValue
+
+    fillValue = int(input('Eingabe (Füllwert - Int): '))
+    humidityValue = int(input('Eingabe (Feuchtigkeit - "OK"/"NOK"): '))
+    
+    # check if humidityValue is in defined region 
+
+    if humidityValue < 0 or humidityValue > 1:
+        print(f'Fehler: "{humidityValue}" ist kein Wert für die Feuchtigkeit.')
+        exit()
+
+    # check if vars are in defined region
+
+    if fillValue < minFillValue or fillValue > maxFillValue:
+        print(f'Fehler: "fillValue" darf den min. Wert "{minFillValue}" nicht unterschreiten oder den max. Wert "{maxFillValue}" überschreiten.')     
+        exit()
+    else:
+        if type(fillValue) == int:
+            print(f'Wasserspeicher-Füllstand beträgt: {fillValue}')
+        else:
+            print('Fehler: "fillValue" muss ein Wert vom Typ Integer sein/eine ganze Zahl sein.')
+            exit()
+
+    if humidityValue == 0:
+        print('Feuchtigkeit ist: OK')
+    else:
+        print('Feuchtigkeit ist: NOK')
 
 # CONTROL
 
@@ -182,27 +214,21 @@ def Control():
     elif fillValue < minFillValue and humidityValue == 1:
         print('Ventil: OUT\nPumpe: Gießen')
     
-
 # SYSTEM: PROCESS-LOOP
 
-if askAction == "1":
-    while True:
-        Scheduler()
-        Simulator()
-        Control()
-        for x in range(timeInterval):
-            time.sleep(1)
+while True:
+    Scheduler()
 
-elif askAction == "2":
-    fillValue = int(input('Eingabe (Füllwert - Int): '))
-    humidityValue = int(input('Eingabe (Feuchtigkeit - "OK"/"NOK"): '))
-    
-    if humidityValue < 0 or humidityValue > 1:
-        print(f'Fehler: "{humidityValue}" ist kein Wert für die Feuchtigkeit.')
+    if askAction == '1':
+        Simulator() # select mode 1
+    elif askAction == '2':
+        customValues() # select mode 2
+    else:
+        print(f'Fehler: "{askAction}" ist kein gültiger Wert')
         exit()
-    
-    while True:
-        Scheduler()
-        Control()
-        for x in range(timeInterval):
-            time.sleep(1)
+
+    Control()
+
+    for x in range(timeInterval):
+        time.sleep(1)
+        #print(f'{timeInterval - x - 1} Sekunde(n) bis zum Aufruf.')
