@@ -1,6 +1,6 @@
 import random, time
 
-timeInterval = 10 # time in secs between each call
+timeInterval = 3 # time in secs between each call
 minFillValue = 0 # minimal Fill Value for water tank
 maxFillValue = 100 # maximal Fill Value for water tan
 
