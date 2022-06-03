@@ -1,12 +1,14 @@
 import time, random
 
-global fillValue
-global humidityValue
+# USER INPUT
 
-# get input-chouice
+set_mode = 2 # (1 = Automatic, 2 = Userdefined Values)
+userDefined_fillValue = 0 # (Integer from <minFillValue> to <maxFillValue>)
+userDefined_humidityValue = 0 # (Integer of "0" = "OK" or "1" = "NOK")
 
-print('Mit welchen Werten möchten sie fortfahren? \n[1] Automatische\n[2] Benutzerdefinierte')
-askAction = input('Eingabe (1/2): ')
+
+# ----------------------------------------------------------------------------------------------------
+
 
 # SCHEDULER
 
@@ -75,11 +77,10 @@ def Scheduler():
         print('Fehler: "timeInterval" darf den Wert 900 (900s) nicht überschreiten.')
         exit()
 
-    #print('Scheduler wurde aufgerufen')
+    print('\n--- SCHEDULER WURDE AUFGERUFEN ---\n')
 
 
-
-
+# ----------------------------------------------------------------------------------------------------
 
 
 # SIMULATOR
@@ -109,7 +110,13 @@ def Simulator():
     if firstCall == True: # "True": is first call
         fillValue = random.randint(minFillValue, maxFillValue)
         firstCall = False
-        print(f'Wasserspeicher-Füllstand beträgt: {fillValue}')
+        if fillValue > maxFillValue:
+            fillValueState = "Zu Hoch"
+        elif fillValue < minFillValue:
+            fillValueState = "Zu Klein"
+        else:
+            fillValueState = "Okay"
+        print(f'Wasserspeicher-Füllstand beträgt: {fillValue} ({fillValueState})')
     else: # "False": is not first call
 
         # when addition-tendency
@@ -148,7 +155,13 @@ def Simulator():
         else:
             isLimit = False
             if type(fillValue) == int:
-                print(f'Wasserspeicher-Füllstand beträgt: {fillValue}') # in region: go on
+                if fillValue > maxFillValue:
+                    fillValueState = "Zu Hoch"
+                elif fillValue < minFillValue:
+                    fillValueState = "Zu Klein"
+                else:
+                    fillValueState = "Okay"
+                print(f'Wasserspeicher-Füllstand beträgt: {fillValue} ({fillValueState})') # in region: go on
             else:
                 print('Fehler: "fillValue" muss ein Wert vom Typ Integer sein/eine ganze Zahl sein.')
                 exit()
@@ -163,17 +176,18 @@ def Simulator():
         else:
             print('Feuchtigkeit ist: NOK')
 
-def customValues():
-    global fillValue
-    global humidityValue
 
-    fillValue = int(input('Eingabe (Füllwert - Int): '))
-    humidityValue = int(input('Eingabe (Feuchtigkeit - "OK"/"NOK"): '))
+# ----------------------------------------------------------------------------------------------------
+
+
+# CUSTOM VALUES
+
+def customValues(fillValue, humidityValue):
     
     # check if humidityValue is in defined region 
 
     if humidityValue < 0 or humidityValue > 1:
-        print(f'Fehler: "{humidityValue}" ist kein Wert für die Feuchtigkeit.')
+        print(f'Fehler: "humidityValue" kann nur den Wert "0" (OK) oder "1" (NOK) annehmen.')
         exit()
 
     # check if vars are in defined region
@@ -192,6 +206,10 @@ def customValues():
         print('Feuchtigkeit ist: OK')
     else:
         print('Feuchtigkeit ist: NOK')
+
+
+# ----------------------------------------------------------------------------------------------------
+
 
 # CONTROL
 
@@ -229,21 +247,27 @@ def Control():
     if currentRun != lastRun:
         print(currentRun)
     else:
-        print('Es müssen keine Änderungen vorgenommen werden.')
+        print('Es müssen keine Änderungen vorgenommen werden.\n')
 
     lastRun = currentRun
     
-# SYSTEM: PROCESS-LOOP
+
+# ----------------------------------------------------------------------------------------------------
+
+
+# PROCESS-LOOP
 
 while True:
     Scheduler()
 
-    if askAction == '1':
+    if set_mode == 1:
         Simulator() # select mode 1
-    elif askAction == '2':
-        customValues() # select mode 2
+    elif set_mode == 2:
+        fillValue = userDefined_fillValue
+        humidityValue = userDefined_humidityValue
+        customValues(fillValue, humidityValue) # select mode 2
     else:
-        print(f'Fehler: "{askAction}" ist kein gültiger Wert')
+        print(f'Fehler: Es kann nur zwischen Mode "1" und Mode "2" gewählt werden.')
         exit()
 
     Control()
