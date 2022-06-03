@@ -3,7 +3,7 @@ import time, random
 # USER INPUT
 
 set_mode = 1 # (1 = Automatic, 2 = Userdefined Values)
-userDefined_fillValue = 0 # (Integer from <minFillValue> to <maxFillValue>)
+userDefined_fillValue = 26 # (Integer from <minFillValue> to <maxFillValue>)
 userDefined_humidityValue = 0 # (Integer of "0" = "OK" or "1" = "NOK")
 
 
@@ -124,13 +124,14 @@ def Simulator():
         if tendency == 0:
             if tendencyRange != tendencyRangeCounter:
                 fillValueTimeFactor = tendencyRange / timeInterval # get factor of fillValue and tendencyRange
-                currentTendencyRange = tendencyRange - tendencyRangeCounter 
+                #print(f'Faktor (gerunded) aus Tendenzlänge & Zeitintervall: {round(fillValueTimeFactor, 1)}')
+                currentTendencyRange = tendencyRange - tendencyRangeCounter
                 followingValue = int(round((fillValueTimeFactor / currentTendencyRange) + currentTendencyRange, 0)) # get rounded addition value
                 #print(followingValue)
                 fillValue = fillValue + followingValue # add to fillValue
                 tendencyRangeCounter = tendencyRangeCounter + 1
             else:
-                tendency = random.randint(0, 1)
+                tendency = 1
                 tendencyRange = random.randint(3, 7)
                 tendencyRangeCounter = 0
         
@@ -139,13 +140,14 @@ def Simulator():
         else:
             if tendencyRange != tendencyRangeCounter:
                 fillValueTimeFactor = tendencyRange / timeInterval # get factor of fillValue and tendencyRange
+                #print(f'Faktor aus Tendenzlänge & Zeitintervall: {round(fillValueTimeFactor, 1)}')
                 currentTendencyRange = tendencyRangeCounter + 1
                 followingValue = int(round((fillValueTimeFactor / currentTendencyRange) + currentTendencyRange, 0)) # get subtraction addition value
                 #print(followingValue)
                 fillValue = fillValue - followingValue # subtract from fillValue
                 tendencyRangeCounter = tendencyRangeCounter + 1
             else:
-                tendency = random.randint(0, 1)
+                tendency = 0
                 tendencyRange = random.randint(3, 7)
                 tendencyRangeCounter = 0
 
