@@ -1,12 +1,12 @@
 import random, time
 
-timeInterval = 5 # time in secs between each call
+timeInterval = 10 # time in secs between each call
 minFillValue = 0 # minimal Fill Value for water tank
 maxFillValue = 100 # maximal Fill Value for water tan
 
 firstCall = True # stating whether first call or not
 tendency = random.randint(0, 1) # generating randomly whether increasing or decreasing tendency
-tendencyRange = 5#random.randint(3, 7) # generating random tendency range
+tendencyRange = random.randint(3, 7) # generating random tendency range
 tendencyRangeCounter = 0 # counting current tendencyRange status
 isLimit = False # stating whether value reachs limit or not
 
@@ -37,18 +37,18 @@ def Simulator():
     else: # "False": is not first call
 
         # when addition-tendency
-
+        
         if tendency == 0:
             if tendencyRange != tendencyRangeCounter:
                 fillValueTimeFactor = tendencyRange / timeInterval
                 currentTendencyRange = tendencyRange - tendencyRangeCounter
-                factor = int(round((fillValueTimeFactor / currentTendencyRange) + 2 * currentTendencyRange, 0))
+                factor = int(round((fillValueTimeFactor / currentTendencyRange) + currentTendencyRange, 0))
                 print(factor)
                 fillValue = fillValue + factor
                 tendencyRangeCounter = tendencyRangeCounter + 1
             else:
                 tendency = random.randint(0, 1)
-                tendencyRange = 5#random.randint(3, 7)
+                tendencyRange = random.randint(3, 7)
                 tendencyRangeCounter = 0
         
         # when subtraction-tendency
@@ -57,13 +57,13 @@ def Simulator():
             if tendencyRange != tendencyRangeCounter:
                 fillValueTimeFactor = tendencyRange / timeInterval
                 currentTendencyRange = tendencyRangeCounter + 1
-                factor = int(round((fillValueTimeFactor / currentTendencyRange) + 2 * currentTendencyRange, 0))
+                factor = int(round((fillValueTimeFactor / currentTendencyRange) + currentTendencyRange, 0))
                 print(factor)
                 fillValue = fillValue - factor
                 tendencyRangeCounter = tendencyRangeCounter + 1
             else:
                 tendency = random.randint(0, 1)
-                tendencyRange = 5#random.randint(3, 7)
+                tendencyRange = random.randint(3, 7)
                 tendencyRangeCounter = 0
 
         # check if vars are in defined region
