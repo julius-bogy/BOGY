@@ -1,6 +1,9 @@
 import time, random
+
 global fillValue
 global humidityValue
+
+# get input-chouice
 
 print('Mit welchen Werten möchten sie fortfahren? \n[1] Automatische\n[2] Benutzerdefinierte')
 askAction = input('Eingabe (1/2): ')
@@ -13,7 +16,7 @@ def Scheduler():
     global minFillValue
     global maxFillValue
     
-    timeInterval = 10 # time in secs between each call
+    timeInterval = 5 # time in secs between each call
     minFillValue = 0 # minimal Fill Value for water tank
     maxFillValue = 100 # maximal Fill Value for water tank
 
@@ -151,6 +154,7 @@ def Simulator():
                 exit()
 
     # SIMULATOR: HUMIDITY-VALUE
+
     if isLimit == False:
         humidityValue = random.randint(0, 1)
 
@@ -191,28 +195,54 @@ def customValues():
 
 # CONTROL
 
+# setting start-vars
+
+global lastRun
+global currentRun
+
+lastRun = [None, None]
+currentRun = [None, None]
+
 def Control():
     
-    # fillValue (>max) & humidityValue (OK/NOK)
+    # remove every list item
 
-    if fillValue > maxFillValue and humidityValue == 0:
-        print('Ventil: OUT\nPumpe: Entwässern')
-    elif fillValue > maxFillValue and humidityValue == 1:
-        print('Ventil: IN\nPumpe: Gießen')
-    
-    # fillValue (okay) & humidityValue (OK/NOK)
+    for x in range(len(currentRun)):
+        currentRun.remove(currentRun[0])
 
-    elif fillValue < maxFillValue and fillValue > minFillValue and humidityValue == 0:
-        print('Ventil: IN\nPumpe: Aus')
-    elif fillValue < maxFillValue and fillValue > minFillValue and humidityValue == 1:
-        print('Ventil: IN\nPumpe: Gießen')
+    currentRun.append(fillValue) # add fillValue to current run
+    currentRun.append(humidityValue) # add humidityValue to current run
 
-    # fillValue (<min) & humidityValue (OK/NOK)
+    print(lastRun)
+    print(currentRun)
 
-    elif fillValue < minFillValue and humidityValue == 0:
-        print('Ventil: OUT\nPumpe: Aus')
-    elif fillValue < minFillValue and humidityValue == 1:
-        print('Ventil: OUT\nPumpe: Gießen')
+    if currentRun[0] != lastRun[0] or currentRun[1] != lastRun[1]:
+        
+        # fillValue (>max) & humidityValue (OK/NOK)
+
+        if fillValue > maxFillValue and humidityValue == 0:
+            print('Ventil: OUT\nPumpe: Entwässern')
+        elif fillValue > maxFillValue and humidityValue == 1:
+            print('Ventil: IN\nPumpe: Gießen')
+        
+        # fillValue (okay) & humidityValue (OK/NOK)
+
+        elif fillValue < maxFillValue and fillValue > minFillValue and humidityValue == 0:
+            print('Ventil: IN\nPumpe: Aus')
+        elif fillValue < maxFillValue and fillValue > minFillValue and humidityValue == 1:
+            print('Ventil: IN\nPumpe: Gießen')
+
+        # fillValue (<min) & humidityValue (OK/NOK)
+
+        elif fillValue < minFillValue and humidityValue == 0:
+            print('Ventil: OUT\nPumpe: Aus')
+        elif fillValue < minFillValue and humidityValue == 1:
+            print('Ventil: OUT\nPumpe: Gießen')
+    else:
+        print("No changes are required!")
+
+    lastRun[0] = currentRun[0]
+    lastRun[1] = currentRun[1]
     
 # SYSTEM: PROCESS-LOOP
 
